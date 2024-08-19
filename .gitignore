@@ -1,0 +1,15 @@
+node_modules/
+
+# Ignore compiled output
+dist/
+target/
+
+# Ignore editor and IDE files
+.vscode/
+.idea/
+
+# Ignore build artifacts
+Cargo.lock
+yew-app.wasm
+
+tailwind.css
