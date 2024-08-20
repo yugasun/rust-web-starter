@@ -108,16 +108,19 @@ impl Component for App {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let logo_url = "./static/images/rust-logo.png";
+
         html! {
             <div class="h-100 w-full flex flex-col items-center justify-center bg-teal-lightest font-sans">
-                <img class="block mx-auto h-24 rounded-full sm:mx-0 sm:shrink-0" src="/static/images/rust-logo.png" alt="Rust Logo" />
+                <img class="block mx-auto h-24 rounded-full sm:mx-0 sm:shrink-0" src={logo_url} alt="Rust Logo" />
 
-                <section class="card bg-base-100 lg:card-side shadow-xl">
-                    <div class="card-title flex flex-col">
-                        <h1 class="text-grey-darkest">{"ToDos"}</h1>
-                        { self.view_input(ctx.link())}
-                    </div>
+                <section class="card bg-base-100 lg:card-side shadow-xl flex flex-col">
+
                     <div class="card-body">
+                        <div class="card-title flex flex-col">
+                            <h1 class="text-grey-darkest">{"ToDos"}</h1>
+                            { self.view_input(ctx.link())}
+                        </div>
                         <ul class="menu menu-horizontal menu-sm bg-base-200 rounded-box gap-2">
                             { for Filter::iter().map(|f| self.view_filter(f, ctx.link())) }
                         </ul>

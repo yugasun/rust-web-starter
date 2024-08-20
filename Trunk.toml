@@ -4,3 +4,12 @@ address = "127.0.0.1"
 
 # The port to listen on
 port = 8000
+
+[build]
+# The command to build the project
+dist = "dist"
+
+[[hooks]]
+stage = "post_build"
+command = "sh"
+command_arguments = ["-c", "echo 'Post Build Hook!'"]
