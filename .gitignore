@@ -8,8 +8,4 @@ target/
 .vscode/
 .idea/
 
-# Ignore build artifacts
-Cargo.lock
-yew-app.wasm
-
 tailwind.css
