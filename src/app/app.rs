@@ -3,7 +3,7 @@ use strum::IntoEnumIterator;
 use web_sys::HtmlInputElement as InputElement;
 use yew::events::{FocusEvent, KeyboardEvent};
 use yew::html::Scope;
-use yew::{classes, html, Classes, Component, Context, Html, NodeRef, TargetCast};
+use yew::{html, Classes, Component, Context, Html, NodeRef, TargetCast};
 
 use super::state::{Entry, Filter, State};
 
@@ -108,47 +108,23 @@ impl Component for App {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let hidden_class = if self.state.entries.is_empty() {
-            "hidden"
-        } else {
-            ""
-        };
-
         html! {
-            <div class="todomvc-wrapper h-100 w-full flex flex-col items-center justify-center bg-teal-lightest font-sans">
+            <div class="h-100 w-full flex flex-col items-center justify-center bg-teal-lightest font-sans">
                 <img class="block mx-auto h-24 rounded-full sm:mx-0 sm:shrink-0" src="/static/images/rust-logo.png" alt="Rust Logo" />
 
-                <section class="todo-app bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
-                    <header class="header mb-4">
+                <section class="card bg-base-100 lg:card-side shadow-xl">
+                    <div class="card-title flex flex-col">
                         <h1 class="text-grey-darkest">{"ToDos"}</h1>
                         { self.view_input(ctx.link())}
-                    </header>
-                    <section class={classes!("main", hidden_class)}>
-                        <ul class="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box">
+                    </div>
+                    <div class="card-body">
+                        <ul class="menu menu-horizontal menu-sm bg-base-200 rounded-box gap-2">
                             { for Filter::iter().map(|f| self.view_filter(f, ctx.link())) }
                         </ul>
-                        <label class="label cursor-pointer">
-                            <input
-                                type="checkbox"
-                                class="checkbox checkbox-primary mr-2"
-                                id="toggle-all"
-                                checked={self.state.is_all_completed()}
-                                onclick={ctx.link().callback(|_| Msg::ToggleAll)}
-                            />
-                            <span for="label-text">{"Mark all as complete"}</span>
-                        </label>
-                        <ul class="todo-list flex flex-col justify-start mb-4 items-center">
+                        <ul class="flex flex-col justify-start mb-4 items-center">
                             { for self.state.entries.iter().filter(|e| self.state.filter.fits(e)).enumerate().map(|e| self.view_entry(e, ctx.link())) }
                         </ul>
-                    </section>
-                    <footer class={classes!("footer", hidden_class, ["flex", "flex-col"])}>
-                        <div class="todo-count w-full">
-                            <span class="font-bold">{ self.state.total() }</span><span>{ " item(s) left" }</span>
-                        </div>
-                        <div class="clear-completed" onclick={ctx.link().callback(|_| Msg::ClearCompleted)}>
-                            { format!("Clear completed ({})", self.state.total_completed())}
-                        </div>
-                    </footer>
+                    </div>
                 </section>
             </div>
         }
@@ -157,11 +133,9 @@ impl Component for App {
 
 impl App {
     fn view_filter(&self, filter: Filter, link: &Scope<Self>) -> Html {
-        let mut cls = Classes::from("filter");
+        let mut cls = Classes::from("");
         if self.state.filter == filter {
-            cls.push("selected");
-        } else {
-            cls.push(classes!("unselected"))
+            cls.push("btn-active");
         };
 
         html! {
@@ -188,29 +162,24 @@ impl App {
         });
 
         html! {
-            <div class="flex mt-4">
+            <div class="join">
                 <input
                     type="text"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker"
+                    class="input input-bordered join-item"
                     placeholder="Add todos"
                     onkeypress={onkeypress}
                 />
+                <button class="btn join-item">{"Add"}</button>
             </div>
         }
     }
 
     fn view_entry(&self, (idx, entry): (usize, &Entry), link: &Scope<Self>) -> Html {
-        let mut class = Classes::from("todo flex w-full justify-between items-center mb-2");
-        if entry.editing {
-            class.push(" editing");
-        }
-        if entry.completed {
-            class.push(" completed");
-        }
+        let cls = Classes::from("flex w-full justify-between items-center mb-2");
 
         html! {
-            <li {class}>
-                <div class="todo-item flex items-center gap-2 flex-1">
+            <li class={cls}>
+                <div class="flex items-center gap-2 flex-1">
                     <input
                         type="checkbox"
                         class="toggle"
@@ -228,9 +197,7 @@ impl App {
                             }
                         }
                     }
-                    <button class="btn btn-error" onclick={link.callback(move |_| Msg::Remove(idx))}>
-                        { "Remove" }
-                    </button>
+                    <kbd class="kbd cursor-pointer opacity-100 hover:opacity-80" onclick={link.callback(move |_| Msg::Remove(idx))}>{"x"}</kbd>
                 </div>
             </li>
         }
@@ -253,7 +220,7 @@ impl App {
             html! {
                 <input
                     type="text"
-                    class="edit flex-1"
+                    class="input input-ghost w-full max-w-xs flex-1"
                     value={self.state.edit_value.clone()}
                     ref={self.focus_ref.clone()}
                     onmouseover={link.callback(|_| Msg::Focus)}

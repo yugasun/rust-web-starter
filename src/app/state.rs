@@ -153,9 +153,9 @@ impl Filter {
 impl IntoPropValue<Html> for Filter {
     fn into_prop_value(self) -> yew::Html {
         html! {
-          <>
-            {self.to_string()}
-          </>
+            <>
+                {self.to_string()}
+            </>
         }
     }
 }

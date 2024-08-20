@@ -10,24 +10,45 @@ Install Rust:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-#### WebAssembly
+#### Node.js And PNPM
 
-Install WebAssembly target
+Install Node.js:
 
 ```bash
-rustup target add wasm32-unknown-unknown
+# installs nvm (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+# download and install Node.js (you may need to restart the terminal)
+nvm install 18
 ```
 
-#### Install Trunk
-
-Trunk can build, bundle & ship your Rust WASM application to the web.
+Install PNPM:
 
 ```bash
-cargo install --locked trunk
+npm install -g pnpm
 ```
 
 ### Run
 
+Before running the application, you need to install the dependencies:
+
 ```bash
-trunk serve
+pnpm run bootstrap
 ```
+
+Then you can run the application:
+
+```bash
+pnpm run dev
+```
+
+### Build
+
+To build the application:
+
+```bash
+pnpm run build
+```
+
+## License
+
+[MIT @yugasun](LICENSE)
